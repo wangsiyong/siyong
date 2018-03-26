@@ -1,0 +1,27 @@
+Usage:
+
+usage: dcm2niiConverter.exe <inputDir> <outputDir> <filename>
+
+<filename> format: <namestr1>%<option><namestr2>%<option> ...
+
+    <namestr1>,<namestr2>: any name string to insert to the output file name
+    %<option>: options to insert scan information to the output file name 
+
+%Z: Z-spacing (in mm). Output example: "Z1.25MM"
+%K: convolutional kernel. Output example: "LUNG", "STANDARD"
+%m: manufacture name
+%f: input folder name
+%i: patient ID
+%p: protocol name
+%s: series name 
+
+Usage example: 
+Command: 
+    dcm2niiConverter.exe D:\Data\BJCH\ct157112\2017-03-15\DICOM  D:\Data\BJCH\ct157112\2017-03-15 ct157112_%Z_%m_%K
+Output files are:
+    03/28/2017  05:09 PM           524,640 ct157112_Z1.000MM_GE_unknown.nii
+    03/28/2017  05:09 PM       124,256,608 ct157112_Z1.250MM_GE_LUNG.nii
+    03/28/2017  05:09 PM       124,256,608 ct157112_Z1.250MM_GE_STANDARD.nii
+    03/28/2017  05:09 PM         1,166,012 ct157112_Z10.000MM_GE_STANDARD.nii
+    03/28/2017  05:09 PM        31,457,632 ct157112_Z5.000MM_GE_LUNG.nii
+    03/28/2017  05:09 PM        31,457,632 ct157112_Z5.000MM_GE_STANDARD.nii
