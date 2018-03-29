@@ -45,7 +45,7 @@ def resample_sitkImage(sitkImage, newSpacing):
     return sitk.Resample(sitkImage, newSize, transform, sitk.sitkLinear, sitkImage.GetOrigin(), \
                          newSpacing, sitkImage.GetDirection(), 0, sitkImage.GetPixelID())
 
-def calculateRadiomicsFromJson(niiFile, jsonFile, applyLog=False, applyWavelet=False):
+def calculateRadiomicsFromJson(niiFile, jsonFile, re_divide=1, applyLog=False, applyWavelet=False):
     # moduleConfig = get_current_config()
     # processing nii
     sitkImageParent = sitk.ReadImage(niiFile)
@@ -104,8 +104,7 @@ def calculateRadiomicsFromJson(niiFile, jsonFile, applyLog=False, applyWavelet=F
         ori_matrix = (int(direction[0] * (bbox_ori[0] - origin[0]) / spacing[0]), \
                       int(direction[4] * (bbox_ori[1] - origin[1]) / spacing[1]), \
                       int(direction[8] * (bbox_ori[2] - origin[2]) / spacing[2]))
-
-        # sitkMask = resample_sitkImage(sitkMask, (spacing[0]/2, spacing[1]/2, spacing[2]/2))
+        sitkMask = resample_sitkImage(sitkMask, (spacing[0]/re_divide, spacing[1]/re_divide, spacing[2]/re_divide))
 
         sitkImage = sitk.RegionOfInterest(sitkImageParent, sitkMask.GetSize(), ori_matrix)
         sitkImage.SetSpacing(spacing)
@@ -221,8 +220,8 @@ def calculateRadiomicsFromJson(niiFile, jsonFile, applyLog=False, applyWavelet=F
                     waveGlszmResult[key] = val
     return features
 
-def run(nii, jsf, src=None, dst=None, applyLog=False, applyWavelet=False):
-    features = calculateRadiomicsFromJson(nii, jsf, applyLog, applyWavelet)
+def run(nii, jsf, re_divide=1 src=None, dst=None, applyLog=False, applyWavelet=False):
+    features = calculateRadiomicsFromJson(nii, jsf, re_divide, applyLog, applyWavelet)
     if not features:
         return
     _csv = jsf
