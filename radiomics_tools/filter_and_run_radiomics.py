@@ -218,11 +218,21 @@ class MainWindow(QDialog):
                 self.printMsg('run radiomics...')
                 print(nii_file, json_file, self.rad_json_source_path, self.save_absolute_path or r'D:\ExcelResults', applyLog, applyWavelet)
                 try:
-                    run(nii_file, json_file, self.rad_json_source_path, self.save_absolute_path or r'D:\ExcelResults', applyLog, applyWavelet)
+                    run(nii_file, json_file, self.rad_json_source_path, self.save_absolute_path or r'D:\ExcelResults', re_divide=1, applyLog=applyLog, applyWavelet=applyWavelet)
+                    print(1111)
                 except RuntimeError:
-                    # nii has some problem
-                    print('failed - -')
-                    pass
+                    try:
+                        run(nii_file, json_file, self.rad_json_source_path, self.save_absolute_path or r'D:\ExcelResults',
+                            re_divide=2, applyLog=applyLog, applyWavelet=applyWavelet)
+                        print(2222)
+                    except RuntimeError:
+                        try:
+                            run(nii_file, json_file, self.rad_json_source_path,
+                                self.save_absolute_path or r'D:\ExcelResults', re_divide=4, applyLog=applyLog,
+                                applyWavelet=applyWavelet)
+                            print(33333)
+                        except RuntimeError:
+                            pass
                 # 如果保存路径未选择，默认路径'D:\ExcelResults'不存在会报错么？？？   会
                 self.printMsg('Finish!')
                 self.printMsg('-' * 50)
@@ -279,22 +289,26 @@ class MainWindow(QDialog):
     def saveFileSelect(self):
         save_absolute_path = QFileDialog.getExistingDirectory(self, 'Open Dir', os.getcwd())
         self.save_absolute_path = str(save_absolute_path)
-        self.inputFileLineEdit.setText(self.save_absolute_path)
+        self.saveFileLineEdit.setText(self.save_absolute_path)
 
     def filterFiles(self):
+        print('start...')
         if not self.nii_source_path or not self.rad_csv_source_path:
             # pop-up a messagebox
             # QMessageBox.warning('Please select Folders!!', QMessageBox.Yes|QMessageBox.No)
             self.printMsg('Please Select inputFolder and outputFolder!!', 'red')
             return
         jsons = [f for f in os.listdir(self.nii_source_path) if 'CAD_Lung' in f]
+        # jsons = [f for f in os.listdir(self.nii_source_path) if 'CAD_Ziwei' in f]
         for json_file in jsons:
             source_file = os.path.join(self.nii_source_path, json_file)
             out_file = os.path.join(self.rad_csv_source_path, json_file)
             shutil.copy(source_file, out_file)
             # delete items not satisfied
             if not self.getSatifiedResult(out_file):
+                print('not satisfied!!')
                 os.remove(out_file)
+                # pass
             else:
                 print('move file >>> {}'.format(out_file))
                 self.printMsg('move file {}'.format(json_file))
@@ -313,8 +327,11 @@ class MainWindow(QDialog):
         for item in items:
             verified = item.get('VerifiedNodule', {})
             D2 = float(item.get('EllipsoidRadius2')) * 2 or 3.0
-            if any([verified.get(checked, 'false') == 'true' for checked in checked_list]) and D2 <= max_val and D2 >= min_val:
-                new_items.append(item)
+            if D2 <= max_val and D2 >= min_val:
+                if not checked_list:
+                    new_items.append(item)
+                elif any([verified.get(checked, 'false') == 'true' for checked in checked_list]):
+                    new_items.append(item)
         count = len(new_items)
         if not count:
             return False
@@ -347,23 +364,23 @@ class DuplicateDict(dict):
         return self._value
 
     def __iter__(self):
-        def generator():
-            for key, value in self._data.items():
-                if isinstance(value, list) and key == 'item':
-                    for i in value:
-                        if isinstance(i, dict):
-                            self._value = DuplicateDict(i)
-                        else:
-                            self._value = i
-                        yield key
-                elif isinstance(value, dict):
-                    self._value = DuplicateDict(value)
-                    yield key
-                else:
-                    self._value = value
-                    yield key
+        return self.__next__()
 
-        return generator()
+    def __next__(self):
+        for key, value in self._data.items():
+            if isinstance(value, list) and key == 'item':
+                for i in value:
+                    if isinstance(i, dict):
+                        self._value = DuplicateDict(i)
+                    else:
+                        self._value = i
+                    yield key
+            elif isinstance(value, dict):
+                self._value = DuplicateDict(value)
+                yield key
+            else:
+                self._value = value
+                yield key
 
 def pretty_json(s, step_size=4, multi_line_strings=False, advanced_parse=False, tab=False):
     out = ''
@@ -445,6 +462,9 @@ def load_duplicate_json(filename):
 
 
 def dump_duplicate_json(obj, filename):
+    print(1111)
+    for k, v in DuplicateDict(obj).items():
+        print(k, ":", v)
     json_str = pretty_json(json.dumps(DuplicateDict(obj), ensure_ascii=False).encode('utf-8'))
     with open(filename, 'w') as fp:
         fp.write(json_str)

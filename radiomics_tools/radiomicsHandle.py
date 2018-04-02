@@ -150,8 +150,9 @@ def calculateRadiomicsFromJson(niiFile, jsonFile, re_divide=1, applyLog=False, a
 
         # if moduleConfig['switch.applyLog']:
         if applyLog:
+            print(22222222222222222222222222222222222222)
             sigmaValues = numpy.arange(5., 0., -.5)[::1]
-            for logImage, imageTypeName, inputKwargs in imageoperations.getLoGImage(sitkImage, sigma=sigmaValues):
+            for logImage, imageTypeName, inputKwargs in imageoperations.getLoGImage(sitkImage, sitkMask, sigma=sigmaValues):
                 logFirstorderFeatures = firstorder.RadiomicsFirstOrder(logImage, sitkMask, **inputKwargs)
                 logShapeFeatures=shape.RadiomicsShape(logImage, sitkMask, **inputKwargs)
                 logGlcmFeatures=glcm.RadiomicsGLCM(logImage, sitkMask, **inputKwargs)
@@ -185,7 +186,7 @@ def calculateRadiomicsFromJson(niiFile, jsonFile, re_divide=1, applyLog=False, a
 
         # if moduleConfig['switch.applywavelet']:
         if applyWavelet:
-            for decompositionImage, decompositionName, inputKwargs in imageoperations.getWaveletImage(sitkImage):
+            for decompositionImage, decompositionName, inputKwargs in imageoperations.getWaveletImage(sitkImage, sitkMask):
                 waveletFirstOrderFeatures = firstorder.RadiomicsFirstOrder(decompositionImage, sitkMask, **inputKwargs)
                 waveShapeFeatures=shape.RadiomicsShape(decompositionImage, sitkMask, **inputKwargs)
                 waveGlcmFeatures=glcm.RadiomicsGLCM(decompositionImage, sitkMask, **inputKwargs)
@@ -220,7 +221,7 @@ def calculateRadiomicsFromJson(niiFile, jsonFile, re_divide=1, applyLog=False, a
                     waveGlszmResult[key] = val
     return features
 
-def run(nii, jsf, re_divide=1 src=None, dst=None, applyLog=False, applyWavelet=False):
+def run(nii, jsf, src=None, dst=None, re_divide=1, applyLog=False, applyWavelet=False):
     features = calculateRadiomicsFromJson(nii, jsf, re_divide, applyLog, applyWavelet)
     if not features:
         return
