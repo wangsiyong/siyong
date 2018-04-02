@@ -3,3 +3,13 @@
 
 # pyc
 *.pyc
+
+# zip
+*.zip
+*.7z
+
+# radiomics
+**/radiomics/**
+
+# png
+**.png
