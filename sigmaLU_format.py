@@ -10,7 +10,7 @@ class SigmaLUChecker(object):
     """
     sigmaLU checker(use python3)
     """
-    def __init__(self, check_exe_path, input_path, output_path=r'D:\sigmaLUchecked', suffix_name='', nodule_add=[], verified_add=[]):
+    def __init__(self, check_exe_path, input_path, output_path, suffix_name='', nodule_add=[], verified_add=[]):
         self.check_exe_path = check_exe_path
         # self.check_script_path = r'D:\GitHub\siyong\exes\format\sigmaLU_gtValidate.py'
         self.input_path = input_path
