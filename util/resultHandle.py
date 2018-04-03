@@ -117,20 +117,20 @@ class DuplicateDict(dict):
         return self._value
 
     def __iter__(self):
-        def generator():
-            for key, value in self._data.items():
-                if isinstance(value, list) and key == 'item':
-                    for i in value:
-                        if isinstance(i, dict):
-                            self._value = DuplicateDict(i)
-                        else:
-                            self._value = i
-                        yield key
-                elif isinstance(value, dict):
-                    self._value = DuplicateDict(value)
-                    yield key
-                else:
-                    self._value = value
-                    yield key
+        return self.__next__()
 
-        return generator()
+    def __next__(self):
+        for key, value in self._data.items():
+            if isinstance(value, list) and key == 'item':
+                for i in value:
+                    if isinstance(i, dict):
+                        self._value = DuplicateDict(i)
+                    else:
+                        self._value = i
+                    yield key
+            elif isinstance(value, dict):
+                self._value = DuplicateDict(value)
+                yield key
+            else:
+                self._value = value
+                yield key
