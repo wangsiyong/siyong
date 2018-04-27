@@ -25,9 +25,10 @@ import argparse
 from collections import OrderedDict
 import numpy, ijson, six
 import SimpleITK as sitk
-from radiomics import firstorder, glcm, glrlm, glszm, shape, imageoperations
+from radiomics import firstorder, glcm, glrlm, glszm, shape, imageoperations, _version
 # from sigma.base import get_current_config
 
+print(_version.get_versions()['version'])
 # ------------------------------------------------------------------------------
 # resampling the sitkImages with origin aligned
 def resample_sitkImage(sitkImage, newSpacing):
