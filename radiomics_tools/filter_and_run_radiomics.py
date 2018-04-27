@@ -5,8 +5,8 @@ import sys
 import json
 import shutil
 from functools import partial
-from PyQt4.QtGui import *
-from PyQt4.Qt import *
+from PyQt5.QtGui import *
+from PyQt5.Qt import *
 
 sys.path.append(r'D:\sigmaUtil')
 from radiomicsHandle import run
@@ -339,7 +339,7 @@ class MainWindow(QDialog):
         new_nodules['AdditionalDiseases'] = origin.get('AdditionalDiseases', {})
         new_nodules['labelVersion'] = origin.get('labelVersion')
         new_nodules['version'] = origin.get('version')
-        new_nodules['count'] = count
+        new_nodules['count'] = str(count)
         return new_nodules
 
     def selectedValues(self):
