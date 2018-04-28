@@ -3,16 +3,19 @@
 **首先, 请先确认电脑已经安装[Slicer 4.8.1(点我下载)](https://download.slicer.org/)**
 
 ## 概述
-1. 找到模块所在文件夹
-2. 解压最新版本压缩包将原有文件夹替换
+1. 将最新版本的压缩包解压到固定文件夹
+2. 将解压出来的文件夹目录添加到`Slicer`的模块中
+3. 设置默认启动模块
 
 ## 详细步骤
 
-1. 找到模块所在文件夹
- 打开Slicer![](../images/slicer.png), 使用快捷键`Ctril + 2`, 弹出`settings`对话框.左侧选择`Modules`, 右侧箭头所指的路径即为模块所在文件夹(此处是`D:\SigmaGui\SgmaLabelTool`)
- ![](../images/settings.png)
+### A. 解压最新版本压缩包到固定文件夹下
+   解压最新提供的压缩包`SigmaLabelTool.zip`, 将解压出的文件夹移至固定文件夹下, 这里移至`D:\SigmaGui`下示例.
+### B. 添加`Slicer`的模块路径
+1. 打开Slicer![](../images/slicer.png), 菜单 - Edit - Application Settings(或使用快捷键`Ctrl + 2`), 如下图, 弹出`Settings`对话框.左侧选择`Modules`.
+2. `Remove`(删除)旧版本`SigmaLabelTool`模块路径, 然后`Add`(添加)新版本路径, ==确认修改==  - >重启软件
 
- **注意: 如果此处为空, 请在相应路径下创建文件目录, 即在D盘下创建文件夹`SigmaGui`, 然后在`SigmaGui`文件夹下创建`SigmaLabelTool`文件夹, 然后点击右侧的`Add`按钮, 添加此路径, 然后点击右下角的`OK`按钮即可重启软件完成配置, 然后进行下一步.**
+### C. 设置默认启动模块
+在 ==默认启动模块== 有个下拉列表, 点击选择您想要默认加载的模块名, ==确认修改== , 重启软件后生效
 
-2. 解压最新版本压缩包将原有文件夹替换
-解压最新提供的压缩包`SigmaLabelTool.zip`, 将解压出的文件夹移至`D:\SigmaGui`目录下将原有的`SigmaLabelTool`文件夹替换即可.
+![](../images/settings.png)
